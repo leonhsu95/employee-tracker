@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+#Protecting private info
+.env
+server.js
