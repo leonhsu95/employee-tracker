@@ -9,11 +9,11 @@ const connection = mysql.createConnection({
   port: 3306,
 
   // Your username
-  user: 'user',
+  user: 'user1',
 
   // Your password
-  password: 'password',
-  database: 'database_name',
+  password: 'password2',
+  database: 'database_name3',
 });
 
 connection.connect((err) => {
