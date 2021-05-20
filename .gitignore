@@ -106,3 +106,4 @@ dist
 #Protecting private info
 .env
 index.js
+server.js
