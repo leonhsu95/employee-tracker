@@ -18,16 +18,45 @@ const connection = mysql.createConnection({
   password: 'password',
   database: 'database_name',
 });
+
+async function init(){
+    inquirer
+    .prompt({
+      name: 'menu',
+      type: 'rawlist',
+      message: 'What would you like to do?',
+      choices: [
+        'View All Employees',
+        'View All Employees By Department',
+        'View All Employees By Manager',
+        'Add Employee',
+        'Remove Employee',
+        'Update Employee Role',
+        'Update Employee Manager',
+        'Quit'
+      ],
+    })
+    .then((answer) => {
+        if (answer.menu === "View All Employees") {
+            querySearch();
+        }
+        else{
+            console.log("Thank you. Goodbye.")
+            connection.end();
+        }
+    })
+};
+
 connection.connect((err) => {
     if (err) throw err;
     console.log(logo(config).render());
-    confirmConnection();
+    init();
 });
 
-const confirmConnection = () => {
-    connection.query('SELECT employee_id, first_name, last_name, title, `name` AS department, salary, manager_id FROM employee e, `role` r, department d WHERE e.role_id = r.role_id AND d.department_id = r.department_id ORDER BY employee_id;', (err, res) => {
+const querySearch = () => {
+    connection.query('SELECT employee_id AS `ID`, first_name AS `First Name`, last_name AS `Last Name`, title AS Position, `name` AS Department, salary AS Salary, manager_id FROM employee e, `role` r, department d WHERE e.role_id = r.role_id AND d.department_id = r.department_id ORDER BY employee_id;', (err, res) => {
         if (err) throw err;
         console.table(res);
-        connection.end();
-    });
+        init();
+    })
 };
