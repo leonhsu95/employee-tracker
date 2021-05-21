@@ -42,7 +42,7 @@ VALUES ("Salesperson", 50000.00, 1),
 ("Marketing Specialist", 60000.00, 4),
 ("Business Analyst", 60000.00, 4),
 ("Software Engineer", 80000.00, 2),
-("Senior Software Engineer", 90000.00, 2),
+("Senior Software Engineer", 85000.00, 2),
 ("Accountant", 60000.00, 3),
 ("HR Coordinator", 40000.00, 5),
 ("Director", 90000.00, 6);
@@ -62,3 +62,10 @@ VALUES ("Yukihiro", "Matsumoto", 6, NULL),
 
 ALTER TABLE employee
 ADD FOREIGN KEY (manager_id) REFERENCES employee(employee_id);
+
+USE EmployeeDB;
+
+SELECT first_name, last_name, title, `name` AS department, salary, manager_id
+FROM employee e, `role` r, department d
+WHERE e.role_id = r.role_id
+AND d.department_id = r.department_id;
