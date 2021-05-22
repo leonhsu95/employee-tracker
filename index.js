@@ -38,7 +38,10 @@ async function init(){
     })
     .then((answer) => {
         if (answer.menu === "View All Employees") {
-            querySearch();
+            searchEmployees();
+        }
+        if (answer.menu === "View All Employees By Department") {
+            searchEmployeeDepartment();
         }
         else{
             console.log("Thank you. Goodbye.")
@@ -53,8 +56,16 @@ connection.connect((err) => {
     init();
 });
 
-const querySearch = () => {
+const searchEmployees = () => {
     connection.query('SELECT employee_id AS `ID`, first_name AS `First Name`, last_name AS `Last Name`, title AS Position, `name` AS Department, salary AS Salary, manager_id FROM employee e, `role` r, department d WHERE e.role_id = r.role_id AND d.department_id = r.department_id ORDER BY employee_id;', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        init();
+    })
+};
+
+const  searchEmployeeDepartment = () => {
+    connection.query('SELECT employee_id AS `ID`, first_name AS `First Name`, last_name AS `Last Name`, title AS Position, `name` AS Department, salary AS Salary, manager_id FROM employee e, `role` r, department d WHERE e.role_id = r.role_id AND d.department_id = r.department_id ORDER BY d.name;', (err, res) => {
         if (err) throw err;
         console.table(res);
         init();

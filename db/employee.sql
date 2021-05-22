@@ -50,8 +50,8 @@ VALUES ("Salesperson", 50000.00, 1),
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Yukihiro", "Matsumoto", 6, NULL),
 ("Zac", "Li", 6, 1),
-("Art", "Sangdao", 3, 4),
-("Alfred", "Zhang", 4, NULL),
+("Bill", "Jenkins", 3, 4),
+("Alfred", "Hitchcock", 4, NULL),
 ("Jian", "Yang", 5, 2),
 ("James", "Hew", 7, NULL),
 ("Toshihiro", "Yokoyama", 2, NULL),
@@ -68,4 +68,15 @@ USE EmployeeDB;
 SELECT first_name, last_name, title, `name` AS department, salary, manager_id
 FROM employee e, `role` r, department d
 WHERE e.role_id = r.role_id
-AND d.department_id = r.department_id;
+AND d.department_id = r.department_id
+ORDER BY employee_id;
+
+-- MANAGER CONNECT REFERENCE
+USE EmployeeDB;
+
+SELECT e.employee_id, e.first_name, e.last_name, title, `name` AS department, salary, CONCAT(m.first_name," ", m.last_name) AS Manager
+FROM employee e, `role` r, department d, employee m
+WHERE e.role_id = r.role_id
+AND d.department_id = r.department_id
+AND e.manager_id = m.employee_id
+ORDER BY employee_id;
