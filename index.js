@@ -20,6 +20,15 @@ const connection = mysql.createConnection({
   database: 'database_name',
 });
 
+// Validation
+let inputVal = (input) => {
+    return (!input || input.trim() === "" || input.length < 2 ? "This field is required. Try again." : true);
+};
+
+let numberVal = (input) => {
+    return (isNaN(input) ? "Invalid ID Number. Try again." : true);
+};
+
 async function init(){
     inquirer
     .prompt({
@@ -42,7 +51,7 @@ async function init(){
         'Remove Departments',
         'View Total Budget by Department',
         'Quit'
-      ],
+    ],
     })
     .then((answer) => {
         return answer.menu === "View All Employees" ? searchEmployees():
@@ -101,11 +110,13 @@ async function addEmployee(){
         type: "input",
         name: "newEmpFName",
         message: "Please enter employee First Name.", 
+        validate: inputVal
     }, 
     {
         type: "input",
         name: "newEmpLName",
-        message: "Please enter employee Last Name.",  
+        message: "Please enter employee Last Name.",
+        validate: inputVal 
     },
     {
         type: "list",
@@ -153,6 +164,7 @@ async function removeEmployee(){
         type: "input",
         name: "rmvEmpID",
         message: "Please type the ID of the employee that is being deleted.", 
+        validate: numberVal
     } 
     ])
       .then((answer) => {
@@ -169,7 +181,8 @@ async function updateRole(){
     {
         type: "input",
         name: "updateEmp",
-        message: "Please type the ID of the employee to update.", 
+        message: "Please type the ID of the employee to update.",
+        validate: numberVal
     }, 
     {
         type: "list",
@@ -204,6 +217,7 @@ async function updateManager(){
         type: "input",
         name: "updateEmp",
         message: "Please type the ID of the employee to update.", 
+        validate: numberVal
     }, 
     {
         type: "list",
@@ -241,12 +255,14 @@ async function addRole(){
     {
         type: "input",
         name: "newRole",
-        message: "What is the name of the new role?", 
+        message: "What is the name of the new role?",
+        validate: inputVal 
     }, 
     {
         type: "input",
         name: "newRoleSalary",
         message: "What is salary of this role?", 
+        validate: numberVal
     },
     {
         type: "list",
@@ -279,6 +295,7 @@ async function removeRole(){
         type: "input",
         name: "rmvRoleID",
         message: "Please type the ID of the role that is being deleted.", 
+        validate: numberVal
     } 
     ])
       .then((answer) => {
@@ -305,6 +322,7 @@ async function addDepartment(){
         type: "input",
         name: "newDepartment",
         message: "What is the name of the new department?", 
+        validate: inputVal
     }, 
     ])
       .then((answer) => {
@@ -322,7 +340,8 @@ async function removeDepartment(){
     {
         type: "input",
         name: "rmvDepartmentID",
-        message: "Please type the ID of the department that is being deleted.", 
+        message: "Please type the ID of the department that is being deleted.",
+        validate: numberVal
     } 
     ])
       .then((answer) => {

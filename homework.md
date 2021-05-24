@@ -102,7 +102,7 @@ How do you deliver this? Here are some guidelines:
 
   * Delete departments v, roles v, and employees v
 
-  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
+  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department v
 
 ## Commit Early and Often
 
