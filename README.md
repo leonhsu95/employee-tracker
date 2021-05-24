@@ -43,8 +43,6 @@ npm i nodemon
 
 The project should look like this:
 ![Application Screenshot](assets/screenshots/screenshot.png)
-![User Output to HTML](assets/screenshots/screenshot2.png)
-![Tests Passed](assets/screenshots/screenshot3.png)
 
 A Video Demonstration can be viewed here: [Demo](https://drive.google.com/file/d/1omn1r9JObocU480T1IEwaee9MLzk9aeb/view?usp=sharing)
 
