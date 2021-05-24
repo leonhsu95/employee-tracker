@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const cTable = require('console.table');
 const logo = require('asciiart-logo');
 const config = require('./package.json');
+const {allEmpQuery, empDepartmentQuery, empManagerQuery, allRolesQuery} = require('./db/queries');
 
 // create the connection information for the sql database
 const connection = mysql.createConnection({
