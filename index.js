@@ -30,7 +30,7 @@ let numberVal = (input) => {
 };
 
 // Get All Query
-function getAllEmployees () {
+function getAllRoles () {
     return new Promise ((resolve, reject) => {
         connection.query(allRolesQuery, (err, res) => {
             if (err) {
@@ -118,7 +118,7 @@ function searchEmployeeManager () {
 };
 
 function addEmployee(){
-    const roles = await getAllEmployees();
+    const roles = await getAllRoles();
     console.log(roles);
     inquirer
       .prompt([  
