@@ -194,7 +194,7 @@ async function addEmployee(){
     ])
       .then((answer) => {
         connection.query(addEmpQuery, [answer.newEmpFName, answer.newEmpLName, answer.newEmpRole, answer.newEmpManager], (err, res) => {
-            console.log(res);
+            console.log("New Employee "+answer.newEmpFName+answer.newEmpLName+" added.");
             init();
          
         });
@@ -208,13 +208,13 @@ async function removeEmployee(){
         {
             type: "list",
             name: "rmvEmployee",
-            message: "Who is the employee's assigned manager?",
+            message: "Which employee are is being removed?",
             choices: employees.map(({ ID: value, 'Last Name': name }) => ({ value, name }))
         },  
     ])
       .then((answer) => {
         connection.query(rmvEmpQuery, [answer.rmvEmployee], (err, res) => {
-            console.log("Employee "+answer.rmvEmployee+" deleted.");
+            console.log("Employee "+answer.rmvEmployee+" removed.");
             init(); 
         });
       });
@@ -267,7 +267,6 @@ async function updateManager(){
       .then((answer) => {
         console.log(answer.updateEmpManager);
         connection.query(updateEmpManager, [answer.updateEmpManager, answer.updateEmp], (err, res) => {
-            console.log(res);
             console.log("Manager of Employee ID: "+ answer.updateEmp+ " updated.");
             init(); 
         });
@@ -322,13 +321,13 @@ async function removeRole(){
         {
             type: "list",
             name: "rmvRole",
-            message: "What role do you wish to delete?", 
+            message: "What role do you wish to remove?", 
             choices: roles.map(({ ID: value, Title: name }) => ({ value, name }))
         },
     ])
       .then((answer) => {
         connection.query(rmvRoleQuery, [answer.rmvRole], (err, res) => {
-            console.log("Role with ID of "+answer.rmvRole+" deleted.");
+            console.log("Role with ID of "+answer.rmvRole+" removed.");
             init(); 
         });
       });
@@ -355,7 +354,7 @@ async function addDepartment(){
     ])
       .then((answer) => {
         connection.query(addDepartmentQuery, [answer.newDepartment], (err, res) => {
-            console.log(res);
+            console.log("Department "+answer.newDepartment+" added.");
             init();
          
         });
@@ -375,7 +374,7 @@ async function removeDepartment(){
     ])
       .then((answer) => {
         connection.query(rmvDepartmentQuery, [answer.rmvDepartment], (err, res) => {
-            console.log("Department "+answer.rmvDepartment+" deleted.");
+            console.log("Department "+answer.rmvDepartment+" removed.");
             init(); 
         });
       });
