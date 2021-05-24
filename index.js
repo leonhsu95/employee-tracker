@@ -29,7 +29,21 @@ let numberVal = (input) => {
     return (isNaN(input) ? "Invalid ID Number. Try again." : true);
 };
 
-async function init(){
+// Get All Query
+function getAllEmployees () {
+    return new Promise ((resolve, reject) => {
+        connection.query(allRolesQuery, (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(res);
+            console.log(res);
+        });
+    });
+}
+
+function init(){
     inquirer
     .prompt({
       name: 'menu',
@@ -79,7 +93,7 @@ connection.connect((err) => {
     init();
 });
 
-async function searchEmployees() {
+function searchEmployees() {
     connection.query(allEmpQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -87,7 +101,7 @@ async function searchEmployees() {
     })
 };
 
-async function searchEmployeeDepartment () {
+function searchEmployeeDepartment () {
     connection.query(empDepartmentQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -95,7 +109,7 @@ async function searchEmployeeDepartment () {
     })
 };
 
-async function searchEmployeeManager () {
+function searchEmployeeManager () {
     connection.query(empManagerQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -103,7 +117,9 @@ async function searchEmployeeManager () {
     })
 };
 
-async function addEmployee(){
+function addEmployee(){
+    const roles = await getAllEmployees();
+    console.log(roles);
     inquirer
       .prompt([  
     {
@@ -122,17 +138,18 @@ async function addEmployee(){
         type: "list",
         name: "newEmpRole",
         message: "What is the employee's role?", 
-        choices: [
-            { name: "Salesperson", value: 1},
-            { name: "Accounts Manager", value: 2},
-            { name: "Marketing Specialist", value: 3},
-            { name: "Business Analyst", value: 4},
-            { name: "Software Engineer", value: 5},
-            { name: "Senior Software Engineer", value: 6},
-            { name: "Accountant", value: 7},
-            { name: "HR Coordinator",value: 8},
-            { name: "Director", value: 9}
-        ]
+        // choices: [
+        //     { name: "Salesperson", value: 1},
+        //     { name: "Accounts Manager", value: 2},
+        //     { name: "Marketing Specialist", value: 3},
+        //     { name: "Business Analyst", value: 4},
+        //     { name: "Software Engineer", value: 5},
+        //     { name: "Senior Software Engineer", value: 6},
+        //     { name: "Accountant", value: 7},
+        //     { name: "HR Coordinator",value: 8},
+        //     { name: "Director", value: 9}
+        // ]
+        choices: roles.map(({ ID: value, Title: name }) => ({ value, name }))
     }, 
     {
         type: "list",
@@ -144,7 +161,7 @@ async function addEmployee(){
             { name: "Yukihiro Matsumoto", value: 1},
             { name: "Alfred Hitchcock", value: 4},
             { name: "Toshihiro Yokoyama", value: 7},
-            { name: "null", value: "null"} // Doesn't work
+            { name: "null", value: null}
         ] 
     },  
     ])
@@ -157,7 +174,7 @@ async function addEmployee(){
       });
   };
 
-async function removeEmployee(){
+function removeEmployee(){
     inquirer
       .prompt([  
     {
@@ -175,7 +192,7 @@ async function removeEmployee(){
       });
 };
 
-async function updateRole(){
+function updateRole(){
     inquirer
       .prompt([  
     {
@@ -210,7 +227,7 @@ async function updateRole(){
 };
 
 
-async function updateManager(){
+function updateManager(){
     inquirer
       .prompt([  
     {
@@ -229,19 +246,21 @@ async function updateManager(){
             { name: "Yukihiro Matsumoto", value: 1},
             { name: "Alfred Hitchcock", value: 4},
             { name: "Toshihiro Yokoyama", value: 7},
-            "NULL" // Doesn't work
+            { name: "null", value: null}
         ] 
     } 
     ])
       .then((answer) => {
+        console.log(answer.updateEmpManager);
         connection.query(updateEmpManager, [answer.updateEmpManager, answer.updateEmp], (err, res) => {
+            console.log(res);
             console.log("Manager of Employee ID: "+ answer.updateEmp+ " updated.");
             init(); 
         });
       });
 };
 
-async function searchRoles () {
+function searchRoles () {
     connection.query(allRolesQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -249,7 +268,7 @@ async function searchRoles () {
     })
 };
 
-async function addRole(){
+function addRole(){
     inquirer
       .prompt([  
     {
@@ -287,7 +306,7 @@ async function addRole(){
       });
   };
 
-async function removeRole(){
+function removeRole(){
     connection.query(allRolesQuery);
     inquirer
       .prompt([  
@@ -307,7 +326,7 @@ async function removeRole(){
 };
 
 
-async function searchDepartments () {
+function searchDepartments () {
     connection.query(allDepartmentsQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -315,7 +334,7 @@ async function searchDepartments () {
     })
 };
 
-async function addDepartment(){
+function addDepartment(){
     inquirer
       .prompt([  
     {
@@ -334,7 +353,7 @@ async function addDepartment(){
       });
 };
 
-async function removeDepartment(){
+function removeDepartment(){
     inquirer
       .prompt([  
     {
@@ -352,7 +371,7 @@ async function removeDepartment(){
       });
 };
 
-async function viewBudget() {
+function viewBudget() {
     connection.query(budgetQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
