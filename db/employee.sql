@@ -63,30 +63,31 @@ VALUES ("Yukihiro", "Matsumoto", 6, NULL),
 ALTER TABLE employee
 ADD FOREIGN KEY (manager_id) REFERENCES employee(employee_id);
 
-USE EmployeeDB;
 
-SELECT first_name, last_name, title, `name` AS department, salary, manager_id
-FROM employee e, `role` r, department d
-WHERE e.role_id = r.role_id
-AND d.department_id = r.department_id
-ORDER BY employee_id;
+-- USE EmployeeDB;
 
--- MANAGER ONLY JOIN REFERENCE
-USE EmployeeDB;
+-- SELECT first_name, last_name, title, `name` AS department, salary, manager_id
+-- FROM employee e, `role` r, department d
+-- WHERE e.role_id = r.role_id
+-- AND d.department_id = r.department_id
+-- ORDER BY employee_id;
 
-SELECT e.employee_id, e.first_name, e.last_name, title, `name` AS department, salary, CONCAT(m.first_name," ", m.last_name) AS Manager
-FROM employee e, `role` r, department d, employee m
-WHERE e.role_id = r.role_id
-AND d.department_id = r.department_id
-AND e.manager_id = m.employee_id
-ORDER BY employee_id;
+-- -- MANAGER ONLY JOIN REFERENCE
+-- USE EmployeeDB;
 
--- ALL EMPLOYEES AND MANAGER JOIN REFERENCE
+-- SELECT e.employee_id, e.first_name, e.last_name, title, `name` AS department, salary, CONCAT(m.first_name," ", m.last_name) AS Manager
+-- FROM employee e, `role` r, department d, employee m
+-- WHERE e.role_id = r.role_id
+-- AND d.department_id = r.department_id
+-- AND e.manager_id = m.employee_id
+-- ORDER BY employee_id;
 
-SELECT e.employee_id, e.first_name, e.last_name, title, `name` AS department, salary, CONCAT(m.first_name," ", m.last_name) AS manager
-FROM `role` r, department d,  employee e
-LEFT OUTER JOIN employee m
-ON e.manager_id = m.employee_id
-WHERE e.role_id = r.role_id
-AND d.department_id = r.department_id
-ORDER BY employee_id;
+-- -- ALL EMPLOYEES AND MANAGER JOIN REFERENCE
+
+-- SELECT e.employee_id, e.first_name, e.last_name, title, `name` AS department, salary, CONCAT(m.first_name," ", m.last_name) AS manager
+-- FROM `role` r, department d,  employee e
+-- LEFT OUTER JOIN employee m
+-- ON e.manager_id = m.employee_id
+-- WHERE e.role_id = r.role_id
+-- AND d.department_id = r.department_id
+-- ORDER BY employee_id;
