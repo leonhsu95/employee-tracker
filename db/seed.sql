@@ -23,7 +23,7 @@ INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Yukihiro", "Matsumoto", 6, NULL),
 ("Zac", "Li", 6, 1),
 ("Art", "Sangdao", 3, 4),
-("Alfred", "Zhang", 4, NULL),
+("Alfred", "Hitchcock", 4, NULL),
 ("Jian", "Yang", 5, 2),
 ("James", "Hew", 7, NULL),
 ("Toshihiro", "Yokoyama", 2, NULL),
