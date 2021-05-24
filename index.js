@@ -30,6 +30,19 @@ let numberVal = (input) => {
 };
 
 // Get All Query
+function getAllEmployees () {
+    return new Promise ((resolve, reject) => {
+        connection.query(allEmpQuery, (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(res);
+            // console.log(res);
+        });
+    });
+}
+
 function getAllRoles () {
     return new Promise ((resolve, reject) => {
         connection.query(allRolesQuery, (err, res) => {
@@ -38,7 +51,20 @@ function getAllRoles () {
                 return;
             }
             resolve(res);
-            console.log(res);
+            // console.log(res);
+        });
+    });
+}
+
+function getAllDepartments () {
+    return new Promise ((resolve, reject) => {
+        connection.query(allDepartmentsQuery, (err, res) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(res);
+            // console.log(res);
         });
     });
 }
@@ -119,6 +145,7 @@ async function searchEmployeeManager () {
 
 async function addEmployee(){
     const roles = await getAllRoles();
+    const employees = await getAllEmployees();
     inquirer
       .prompt([  
     {
@@ -154,14 +181,15 @@ async function addEmployee(){
         type: "list",
         name: "newEmpManager",
         message: "Who is the employee's assigned manager?",
-        choices: [
-            { name: "Dave Wallace", value: 11},
-            { name: "James Hew", value: 6},
-            { name: "Yukihiro Matsumoto", value: 1},
-            { name: "Alfred Hitchcock", value: 4},
-            { name: "Toshihiro Yokoyama", value: 7},
-            { name: "null", value: null}
-        ] 
+        // choices: [
+        //     { name: "Dave Wallace", value: 11},
+        //     { name: "James Hew", value: 6},
+        //     { name: "Yukihiro Matsumoto", value: 1},
+        //     { name: "Alfred Hitchcock", value: 4},
+        //     { name: "Toshihiro Yokoyama", value: 7},
+        //     { name: "null", value: null}
+        // ] 
+        choices: employees.map(({ ID: value, 'Last Name': name }) => ({ value, name }))
     },  
     ])
       .then((answer) => {
@@ -174,47 +202,40 @@ async function addEmployee(){
   };
 
 async function removeEmployee(){
+    const employees = await getAllEmployees();
     inquirer
       .prompt([  
-    {
-        type: "input",
-        name: "rmvEmpID",
-        message: "Please type the ID of the employee that is being deleted.", 
-        validate: numberVal
-    } 
+        {
+            type: "list",
+            name: "rmvEmployee",
+            message: "Who is the employee's assigned manager?",
+            choices: employees.map(({ ID: value, 'Last Name': name }) => ({ value, name }))
+        },  
     ])
       .then((answer) => {
-        connection.query(rmvEmpQuery, [answer.rmvEmpID], (err, res) => {
-            console.log("Employee with ID of "+answer.rmvEmpID+" deleted.");
+        connection.query(rmvEmpQuery, [answer.rmvEmployee], (err, res) => {
+            console.log("Employee "+answer.rmvEmployee+" deleted.");
             init(); 
         });
       });
 };
 
 async function updateRole(){
+    const employees = await getAllEmployees();
+    const roles = await getAllRoles();
     inquirer
-      .prompt([  
+    .prompt([  
     {
-        type: "input",
+        type: "list",
         name: "updateEmp",
-        message: "Please type the ID of the employee to update.",
-        validate: numberVal
-    }, 
+        message: "Which employee are you updating?",
+        choices: employees.map(({ ID: value, 'Last Name': name }) => ({ value, name }))
+    },  
     {
         type: "list",
         name: "updateEmpRole",
-        message: "What is the employee's role?", 
-        choices: [
-            { name: "Salesperson", value: 1},
-            { name: "Accounts Manager", value: 2},
-            { name: "Marketing Specialist", value: 3},
-            { name: "Business Analyst", value: 4},
-            { name: "Software Engineer", value: 5},
-            { name: "Senior Software Engineer", value: 6},
-            { name: "Accountant", value: 7},
-            { name: "HR Coordinator",value: 8},
-            { name: "Director", value: 9}
-        ]
+        message: "What is the employee's new role?", 
+        choices: roles.map(({ ID: value, Title: name }) => ({ value, name }))
     }, 
     ])
       .then((answer) => {
@@ -227,26 +248,20 @@ async function updateRole(){
 
 
 async function updateManager(){
+    const employees = await getAllEmployees();
     inquirer
-      .prompt([  
+    .prompt([  
     {
-        type: "input",
+        type: "list",
         name: "updateEmp",
-        message: "Please type the ID of the employee to update.", 
-        validate: numberVal
+        message: "Which employee are you updating?",
+        choices: employees.map(({ ID: value, 'Last Name': name }) => ({ value, name }))
     }, 
     {
         type: "list",
         name: "updateEmpManager",
-        message: "Who will manager the nominated employee?", 
-        choices: [
-            { name: "Dave Wallace", value: 11},
-            { name: "James Hew", value: 6},
-            { name: "Yukihiro Matsumoto", value: 1},
-            { name: "Alfred Hitchcock", value: 4},
-            { name: "Toshihiro Yokoyama", value: 7},
-            { name: "null", value: null}
-        ] 
+        message: "Who is the employee's assigned manager?",
+        choices: employees.map(({ ID: value, 'Last Name': name }) => ({ value, name }))
     } 
     ])
       .then((answer) => {
@@ -268,6 +283,7 @@ async function searchRoles () {
 };
 
 async function addRole(){
+    const departments = await getAllDepartments();
     inquirer
       .prompt([  
     {
@@ -286,14 +302,7 @@ async function addRole(){
         type: "list",
         name: "newRoleDepartment",
         message: "What department is this role associated with?",
-        choices: [
-            { name: "Sales", value: 1},
-            { name: "IT", value: 2},
-            { name: "Finance", value: 3},
-            { name: "Marketing", value: 4},
-            { name: "Human Resources", value: 4},
-            { name: "Executive", value: 6} 
-        ] 
+        choices: departments.map(({ ID: value, Department: name }) => ({ value, name }))
     },  
     ])
       .then((answer) => {
@@ -306,19 +315,20 @@ async function addRole(){
   };
 
 async function removeRole(){
+    const roles = await getAllRoles();
     connection.query(allRolesQuery);
     inquirer
       .prompt([  
-    {
-        type: "input",
-        name: "rmvRoleID",
-        message: "Please type the ID of the role that is being deleted.", 
-        validate: numberVal
-    } 
+        {
+            type: "list",
+            name: "rmvRole",
+            message: "What role do you wish to delete?", 
+            choices: roles.map(({ ID: value, Title: name }) => ({ value, name }))
+        },
     ])
       .then((answer) => {
-        connection.query(rmvRoleQuery, [answer.rmvRoleID], (err, res) => {
-            console.log("Role with ID of "+answer.rmvRoleID+" deleted.");
+        connection.query(rmvRoleQuery, [answer.rmvRole], (err, res) => {
+            console.log("Role with ID of "+answer.rmvRole+" deleted.");
             init(); 
         });
       });
@@ -353,18 +363,19 @@ async function addDepartment(){
 };
 
 async function removeDepartment(){
+    const departments = await getAllDepartments();
     inquirer
       .prompt([  
     {
-        type: "input",
-        name: "rmvDepartmentID",
-        message: "Please type the ID of the department that is being deleted.",
-        validate: numberVal
+        type: "list",
+        name: "rmvDepartment",
+        message: "What department do you want to remove?",
+        choices: departments.map(({ ID: value, Department: name }) => ({ value, name }))
     } 
     ])
       .then((answer) => {
-        connection.query(rmvDepartmentQuery, [answer.rmvDepartmentID], (err, res) => {
-            console.log("Department with ID of "+answer.rmvDepartmentID+" deleted.");
+        connection.query(rmvDepartmentQuery, [answer.rmvDepartment], (err, res) => {
+            console.log("Department "+answer.rmvDepartment+" deleted.");
             init(); 
         });
       });
