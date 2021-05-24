@@ -86,21 +86,21 @@ How do you deliver this? Here are some guidelines:
 
 * The command-line application should allow users to:
 
-  * Add departments, roles, employees
+  * Add departments, roles, employees v
 
-  * View departments, roles, employees
+  * View departments v, roles v, employees v
 
-  * Update employee roles
+  * Update employee roles v
 
 ## Bonus
 
 * The command-line application should allow users to:
 
-  * Update employee managers
+  * Update employee managers v
 
-  * View employees by manager
+  * View employees by manager v
 
-  * Delete departments, roles, and employees
+  * Delete departments v, roles v, and employees v
 
   * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
 
