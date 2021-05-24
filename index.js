@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const cTable = require('console.table');
 const logo = require('asciiart-logo');
 const config = require('./package.json');
-const {allEmpQuery, empDepartmentQuery, empManagerQuery, allRolesQuery} = require('./db/queries');
+const {allEmpQuery, empDepartmentQuery, empManagerQuery, addEmpQuery, rmvEmpQuery, updateEmpRole, updateEmpManager, allDepartmentsQuery, allRolesQuery, addRoleQuery, rmvRoleQuery, addDepartmentQuery, rmvDepartmentQuery} = require('./db/queries');
 
 // create the connection information for the sql database
 const connection = mysql.createConnection({
@@ -24,7 +24,7 @@ async function init(){
     inquirer
     .prompt({
       name: 'menu',
-      type: 'rawlist',
+      type: 'list',
       message: 'What would you like to do?',
       choices: [
         'View All Employees',
@@ -35,6 +35,11 @@ async function init(){
         'Update Employee Role',
         'Update Employee Manager',
         'View All Roles',
+        'Add Roles',
+        'Remove Roles',
+        'View All Departments',
+        'Add Departments',
+        'Remove Departments',
         'Quit'
       ],
     })
@@ -47,7 +52,11 @@ async function init(){
         answer.menu === "Update Employee Role" ? updateRole():
         answer.menu === "Update Employee Manager" ? updateManager():
         answer.menu === "View All Roles" ? searchRoles():
-        
+        answer.menu === "Add Roles" ? addRole():
+        answer.menu === "Remove Roles" ? removeRole():
+        answer.menu === "View All Departments" ? searchDepartments():
+        answer.menu === "Add Departments" ? addDepartment():
+        answer.menu === "Remove Departments" ? removeDepartment():   
         connection.end()
     })
     
@@ -127,8 +136,7 @@ async function addEmployee(){
     },  
     ])
       .then((answer) => {
-        const query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)';
-        connection.query(query, [answer.newEmpFName, answer.newEmpLName, answer.newEmpRole, answer.newEmpManager], (err, res) => {
+        connection.query(addEmpQuery, [answer.newEmpFName, answer.newEmpLName, answer.newEmpRole, answer.newEmpManager], (err, res) => {
             console.log(res);
             init();
          
@@ -146,8 +154,7 @@ async function removeEmployee(){
     } 
     ])
       .then((answer) => {
-        const query = 'DELETE FROM employee WHERE employee_id = ? ';
-        connection.query(query, [answer.rmvEmpID], (err, res) => {
+        connection.query(rmvEmpQuery, [answer.rmvEmpID], (err, res) => {
             console.log("Employee with ID of "+answer.rmvEmpID+" deleted.");
             init(); 
         });
@@ -180,8 +187,7 @@ async function updateRole(){
     }, 
     ])
       .then((answer) => {
-        const query = 'UPDATE employee SET role_id = ? WHERE employee_id = ? ';
-        connection.query(query, [answer.updateEmpRole, answer.updateEmp], (err, res) => {
+        connection.query(updateEmpRole, [answer.updateEmpRole, answer.updateEmp], (err, res) => {
             console.log("Role of Employee ID: "+ answer.updateEmp+ " updated.");
             init(); 
         });
@@ -198,7 +204,7 @@ async function updateManager(){
         message: "Please type the ID of the employee to update.", 
     }, 
     {
-        type: "rawlist",
+        type: "list",
         name: "updateEmpManager",
         message: "Who will manager the nominated employee?", 
         choices: [
@@ -207,13 +213,12 @@ async function updateManager(){
             { name: "Yukihiro Matsumoto", value: 1},
             { name: "Alfred Hitchcock", value: 4},
             { name: "Toshihiro Yokoyama", value: 7},
-            { name: "null", value: "null"} // Doesn't work
+            "NULL" // Doesn't work
         ] 
     } 
     ])
       .then((answer) => {
-        const query = 'UPDATE employee SET manager_id = ? WHERE employee_id = ? ';
-        connection.query(query, [answer.updateEmpManager, answer.updateEmp], (err, res) => {
+        connection.query(updateEmpManager, [answer.updateEmpManager, answer.updateEmp], (err, res) => {
             console.log("Manager of Employee ID: "+ answer.updateEmp+ " updated.");
             init(); 
         });
@@ -226,6 +231,104 @@ async function searchRoles () {
         console.table(res);
         init();
     })
+};
+
+async function addRole(){
+    inquirer
+      .prompt([  
+    {
+        type: "input",
+        name: "newRole",
+        message: "What is the name of the new role?", 
+    }, 
+    {
+        type: "input",
+        name: "newRoleSalary",
+        message: "What is salary of this role?", 
+    },
+    {
+        type: "list",
+        name: "newRoleDepartment",
+        message: "What department is this role associated with?",
+        choices: [
+            { name: "Sales", value: 1},
+            { name: "IT", value: 2},
+            { name: "Finance", value: 3},
+            { name: "Marketing", value: 4},
+            { name: "Human Resources", value: 4},
+            { name: "Executive", value: 6} 
+        ] 
+    },  
+    ])
+      .then((answer) => {
+        connection.query(addRoleQuery, [answer.newRole, answer.newRoleSalary, answer.newRoleDepartment], (err, res) => {
+            console.log("New Role "+answer.newRole+" added");
+            init();
+         
+        });
+      });
+  };
+
+async function removeRole(){
+    connection.query(allRolesQuery);
+    inquirer
+      .prompt([  
+    {
+        type: "input",
+        name: "rmvRoleID",
+        message: "Please type the ID of the role that is being deleted.", 
+    } 
+    ])
+      .then((answer) => {
+        connection.query(rmvRoleQuery, [answer.rmvRoleID], (err, res) => {
+            console.log("Role with ID of "+answer.rmvRoleID+" deleted.");
+            init(); 
+        });
+      });
+};
+
+
+async function searchDepartments () {
+    connection.query(allDepartmentsQuery, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        init();
+    })
+};
+
+async function addDepartment(){
+    inquirer
+      .prompt([  
+    {
+        type: "input",
+        name: "newDepartment",
+        message: "What is the name of the new department?", 
+    }, 
+    ])
+      .then((answer) => {
+        connection.query(addDepartmentQuery, [answer.newDepartment], (err, res) => {
+            console.log(res);
+            init();
+         
+        });
+      });
+};
+
+async function removeDepartment(){
+    inquirer
+      .prompt([  
+    {
+        type: "input",
+        name: "rmvDepartmentID",
+        message: "Please type the ID of the department that is being deleted.", 
+    } 
+    ])
+      .then((answer) => {
+        connection.query(rmvDepartmentQuery, [answer.rmvDepartmentID], (err, res) => {
+            console.log("Department with ID of "+answer.rmvDepartmentID+" deleted.");
+            init(); 
+        });
+      });
 };
 
 
