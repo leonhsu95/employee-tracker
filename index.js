@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const cTable = require('console.table');
 const logo = require('asciiart-logo');
 const config = require('./package.json');
-const {allEmpQuery, empDepartmentQuery, empManagerQuery, addEmpQuery, rmvEmpQuery, updateEmpRole, updateEmpManager, allDepartmentsQuery, allRolesQuery, addRoleQuery, rmvRoleQuery, addDepartmentQuery, rmvDepartmentQuery} = require('./db/queries');
+const {allEmpQuery, empDepartmentQuery, empManagerQuery, addEmpQuery, rmvEmpQuery, updateEmpRole, updateEmpManager, allDepartmentsQuery, allRolesQuery, addRoleQuery, rmvRoleQuery, addDepartmentQuery, rmvDepartmentQuery, budgetQuery} = require('./db/queries');
 
 // create the connection information for the sql database
 const connection = mysql.createConnection({
@@ -40,6 +40,7 @@ async function init(){
         'View All Departments',
         'Add Departments',
         'Remove Departments',
+        'View Total Budget by Department',
         'Quit'
       ],
     })
@@ -56,7 +57,8 @@ async function init(){
         answer.menu === "Remove Roles" ? removeRole():
         answer.menu === "View All Departments" ? searchDepartments():
         answer.menu === "Add Departments" ? addDepartment():
-        answer.menu === "Remove Departments" ? removeDepartment():   
+        answer.menu === "Remove Departments" ? removeDepartment():  
+        answer.menu === "View Total Budget by Department" ? viewBudget():   
         connection.end()
     })
     
@@ -331,6 +333,12 @@ async function removeDepartment(){
       });
 };
 
-
+async function viewBudget() {
+    connection.query(budgetQuery, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        init();
+    })
+};
 
 
