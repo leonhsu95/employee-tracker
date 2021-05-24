@@ -43,7 +43,7 @@ function getAllRoles () {
     });
 }
 
-function init(){
+async function init(){
     inquirer
     .prompt({
       name: 'menu',
@@ -93,7 +93,7 @@ connection.connect((err) => {
     init();
 });
 
-function searchEmployees() {
+async function searchEmployees() {
     connection.query(allEmpQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -101,7 +101,7 @@ function searchEmployees() {
     })
 };
 
-function searchEmployeeDepartment () {
+async function searchEmployeeDepartment () {
     connection.query(empDepartmentQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -109,7 +109,7 @@ function searchEmployeeDepartment () {
     })
 };
 
-function searchEmployeeManager () {
+async function searchEmployeeManager () {
     connection.query(empManagerQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -117,9 +117,8 @@ function searchEmployeeManager () {
     })
 };
 
-function addEmployee(){
+async function addEmployee(){
     const roles = await getAllRoles();
-    console.log(roles);
     inquirer
       .prompt([  
     {
@@ -174,7 +173,7 @@ function addEmployee(){
       });
   };
 
-function removeEmployee(){
+async function removeEmployee(){
     inquirer
       .prompt([  
     {
@@ -192,7 +191,7 @@ function removeEmployee(){
       });
 };
 
-function updateRole(){
+async function updateRole(){
     inquirer
       .prompt([  
     {
@@ -227,7 +226,7 @@ function updateRole(){
 };
 
 
-function updateManager(){
+async function updateManager(){
     inquirer
       .prompt([  
     {
@@ -260,7 +259,7 @@ function updateManager(){
       });
 };
 
-function searchRoles () {
+async function searchRoles () {
     connection.query(allRolesQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -268,7 +267,7 @@ function searchRoles () {
     })
 };
 
-function addRole(){
+async function addRole(){
     inquirer
       .prompt([  
     {
@@ -306,7 +305,7 @@ function addRole(){
       });
   };
 
-function removeRole(){
+async function removeRole(){
     connection.query(allRolesQuery);
     inquirer
       .prompt([  
@@ -326,7 +325,7 @@ function removeRole(){
 };
 
 
-function searchDepartments () {
+async function searchDepartments () {
     connection.query(allDepartmentsQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -334,7 +333,7 @@ function searchDepartments () {
     })
 };
 
-function addDepartment(){
+async function addDepartment(){
     inquirer
       .prompt([  
     {
@@ -353,7 +352,7 @@ function addDepartment(){
       });
 };
 
-function removeDepartment(){
+async function removeDepartment(){
     inquirer
       .prompt([  
     {
@@ -371,7 +370,7 @@ function removeDepartment(){
       });
 };
 
-function viewBudget() {
+async function viewBudget() {
     connection.query(budgetQuery, (err, res) => {
         if (err) throw err;
         console.table(res);
