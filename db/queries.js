@@ -24,7 +24,7 @@ const addDepartmentQuery = 'INSERT INTO department (name) VALUES (?)';
 
 const rmvDepartmentQuery = 'DELETE FROM department WHERE department_id = ?';
 
-const budgetQuery = 'SELECT d.`name` AS Department, SUM(salary) AS `Total Budget` FROM department d, `role` r WHERE d.department_id = r.department_id GROUP BY d.`name` ORDER BY d.`name`';
+const budgetQuery = 'SELECT d.`name` AS Department, SUM(salary) AS `Total Budget` FROM department d, `role` r, employee e WHERE d.department_id = r.department_id AND r.role_id = e.role_id GROUP BY d.`name` ORDER BY d.`name`';
 
 
 module.exports = {allEmpQuery, empDepartmentQuery, empManagerQuery, addEmpQuery, rmvEmpQuery, updateEmpRole, updateEmpManager, allDepartmentsQuery, allRolesQuery, addRoleQuery, rmvRoleQuery, addDepartmentQuery, rmvDepartmentQuery, budgetQuery};
