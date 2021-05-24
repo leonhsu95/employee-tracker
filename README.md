@@ -77,6 +77,8 @@ SOFTWARE.
 - Console Table will display and generate all information within MySQL Database
 - User can add / edit /remove employees, assigned managers, roles and departments
 
+- Improvements: I can add a null value to clear manager assigned to employee in the future. This can be solved be mapping array and then extended ... in new array
+
 
 ## Tests
 
